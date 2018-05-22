@@ -31,6 +31,7 @@ class Scheduler(object):
                 return
             self._minheap.remove(task)
             heapq.heapify(self._minheap)
+            self._cv.notify()
         logger.info('canceled {}'.format(task.name))
 
     def schedule(self, name, fn, start):
@@ -71,26 +72,25 @@ class Scheduler(object):
 
 
 def main():
-    logging.basicConfig(level=logging.INFO, format='%(threadName)s: %(message)s')
+    logging.basicConfig(level=logging.INFO, format='%(threadName)-10s: %(message)s')
 
     start = datetime.now()
 
-    def task(name):
-        logger.info('running task: {}, elapsed: {}'.format(name, (datetime.now() - start).total_seconds()))
+    def task():
+        logger.info('running, elapsed: {}'.format((datetime.now() - start).total_seconds()))
 
     s = Scheduler()
-    s.schedule('task-1', functools.partial(task, 'task-1'), start + timedelta(seconds=1))
-    s.schedule('task-2', functools.partial(task, 'task-2'), start + timedelta(seconds=2))
+    s.schedule('task-1', functools.partial(task), start + timedelta(seconds=1))
+    s.schedule('task-2', functools.partial(task), start + timedelta(seconds=2))
     s.cancel('task-2')
-    s.schedule('task-3', functools.partial(task, 'task-3'), start + timedelta(seconds=3))
+    s.schedule('task-3', functools.partial(task), start + timedelta(seconds=3))
     # note that task-4 precedes task-3, but is registered after task-3
-    s.schedule('task-4', functools.partial(task, 'task-4'), start + timedelta(seconds=2.5))
+    s.schedule('task-4', functools.partial(task), start + timedelta(seconds=2.5))
     time.sleep(5)
     now = datetime.now()
-    s.schedule('task-5', functools.partial(task, 'task-5'), now + timedelta(seconds=5))
-    s.schedule('task-6', functools.partial(task, 'task-6'), now + timedelta(seconds=4))
-    s.schedule('task-7', functools.partial(task, 'task-7'), now + timedelta(seconds=3.5))
-    s.cancel('task-6')
+    s.schedule('task-5', functools.partial(task), now + timedelta(seconds=5))
+    s.schedule('task-6', functools.partial(task), now + timedelta(seconds=4))
+    s.schedule('task-7', functools.partial(task), now + timedelta(seconds=3.5))
 
 
 if __name__ == '__main__':
