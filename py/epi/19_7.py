@@ -1,10 +1,14 @@
 import heapq
+import logging
 import functools
 import time
 import threading
 from datetime import datetime, timedelta
 from collections import namedtuple
 
+
+logger = logging.getLogger(__name__)
+logger.addHandler(logging.NullHandler())
 
 Task = namedtuple('Task', ['start', 'name', 'fn'])
 
@@ -27,16 +31,15 @@ class Scheduler(object):
                 return
             self._minheap.remove(task)
             heapq.heapify(self._minheap)
-        print('canceled {}'.format(task.name))
+        logger.info('canceled {}'.format(task.name))
 
     def schedule(self, name, fn, start):
         task = Task(start, name, fn)
-        self._cv.acquire()
-        heapq.heappush(self._minheap, task)
-        if self._minheap[0] == task:
+        logger.info('scheduling task: {}'.format(name))
+        with self._cv:
+            heapq.heappush(self._minheap, task)
             self._cv.notify()
-        self._cv.release()
-        print('scheduled task: {}'.format(task.name))
+        logger.info('scheduled task: {}'.format(name))
 
     def _get_next_timeout(self):
         if not self._minheap:
@@ -47,29 +50,33 @@ class Scheduler(object):
         def run():
             while True:
                 self._cv.acquire()
-                no_timeout = self._cv.wait(timeout=self._timeout)
+                logger.info('waiting with timeout: {}'.format(self._timeout))
+                not_expired = self._cv.wait(timeout=self._timeout)
                 if self._timeout is None:
+                    logger.info('no timeout found; using min element')
                     self._timeout = self._get_next_timeout()
                     self._cv.release()
-                elif no_timeout:
+                elif not_expired:
+                    logger.info('already waiting but woken up; comparing current with min element')
                     self._timeout = min(self._timeout, self._get_next_timeout())
                     self._cv.release()
                 else:
-                    # timed out; run the next task
+                    logger.info('timed out; running next task')
                     next_task = heapq.heappop(self._minheap)
                     self._timeout = self._get_next_timeout()
                     self._cv.release()
-                    threading.Thread(target=next_task.fn).start()
-                print('next timeout in {} seconds'.format(self._timeout))
+                    threading.Thread(target=next_task.fn, name=next_task.name).start()
 
-        threading.Thread(target=run).start()
+        threading.Thread(target=run, name='timer').start()
 
 
 def main():
+    logging.basicConfig(level=logging.INFO, format='%(threadName)s: %(message)s')
+
     start = datetime.now()
 
     def task(name):
-        print('running task: {}, elapsed: {}'.format(name, (datetime.now() - start).total_seconds()))
+        logger.info('running task: {}, elapsed: {}'.format(name, (datetime.now() - start).total_seconds()))
 
     s = Scheduler()
     s.schedule('task-1', functools.partial(task, 'task-1'), start + timedelta(seconds=1))
@@ -82,6 +89,8 @@ def main():
     now = datetime.now()
     s.schedule('task-5', functools.partial(task, 'task-5'), now + timedelta(seconds=5))
     s.schedule('task-6', functools.partial(task, 'task-6'), now + timedelta(seconds=4))
+    s.schedule('task-7', functools.partial(task, 'task-7'), now + timedelta(seconds=3.5))
+    s.cancel('task-6')
 
 
 if __name__ == '__main__':
