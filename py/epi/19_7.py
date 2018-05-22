@@ -17,19 +17,17 @@ class Scheduler(object):
         self._cv = threading.Condition(threading.Lock())
         self._minheap = []
         self._timeout = None
-        self._start_timer()
+        self._start()
 
     def cancel(self, name):
-        try:
-            with self._cv:
+        with self._cv:
+            try:
                 task = [task for task in self._minheap if task.name == name][0]
-        except IndexError:
-            return
-        else:
-            with self._cv:
-                self._minheap.remove(task)
-                heapq.heapify(self._minheap)
-            print('canceled {}'.format(task.name))
+            except IndexError:
+                return
+            self._minheap.remove(task)
+            heapq.heapify(self._minheap)
+        print('canceled {}'.format(task.name))
 
     def schedule(self, name, fn, start):
         task = Task(start, name, fn)
@@ -45,7 +43,7 @@ class Scheduler(object):
             return None
         return (self._minheap[0].start - datetime.now()).total_seconds()
 
-    def _start_timer(self):
+    def _start(self):
         def run():
             while True:
                 self._cv.acquire()
@@ -57,16 +55,14 @@ class Scheduler(object):
                     self._timeout = min(self._timeout, self._get_next_timeout())
                     self._cv.release()
                 else:
-                    # timed out; run a task
+                    # timed out; run the next task
                     next_task = heapq.heappop(self._minheap)
-                    th = threading.Thread(target=next_task.fn)
-                    th.start()
                     self._timeout = self._get_next_timeout()
                     self._cv.release()
+                    threading.Thread(target=next_task.fn).start()
                 print('next timeout in {} seconds'.format(self._timeout))
 
-        th = threading.Thread(target=run)
-        th.start()
+        threading.Thread(target=run).start()
 
 
 def main():
