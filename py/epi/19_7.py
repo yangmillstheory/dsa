@@ -79,7 +79,9 @@ def main():
     # note that task-4 precedes task-3, but is registered after task-3
     s.schedule('task-4', functools.partial(task, 'task-4'), start + timedelta(seconds=2.5))
     time.sleep(5)
-    s.schedule('task-5', functools.partial(task, 'task-5'), datetime.now() + timedelta(seconds=5))
+    now = datetime.now()
+    s.schedule('task-5', functools.partial(task, 'task-5'), now + timedelta(seconds=5))
+    s.schedule('task-6', functools.partial(task, 'task-6'), now + timedelta(seconds=4))
 
 
 if __name__ == '__main__':
