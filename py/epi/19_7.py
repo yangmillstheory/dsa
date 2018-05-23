@@ -13,62 +13,72 @@ logger.addHandler(logging.NullHandler())
 Task = namedtuple('Task', ['start', 'name', 'fn'])
 
 
-class Scheduler(object):
-    '''Class that schedules functions to be run in a separate thread at some future
-    time. Supports cancellation of functions that haven't yet started.
-    '''
+class Scheduler:
+    """A schedule of tasks to be run in background threads. Call the
+    schedule method to schedule a task to run at a particular time.
+    Call the task's cancel method to cancel it if it has not already
+    started running.
+
+    """
+
+    @functools.total_ordering
+    class _Task:
+        "A scheduled task."
+
+        def __init__(self, fn, start):
+            "Create task that will run fn at or after the datetime start."
+            self.fn = fn
+            self.start = start
+            self.cancelled = False
+
+        def __le__(self, other):
+            # Tasks compare according to their start time.
+            return self.start <= other.start
+
+        @property
+        def timeout(self):
+            "Return time remaining in seconds before task should start."
+            return (self.start - datetime.now()).total_seconds()
+
+        def cancel(self):
+            "Cancel task if it has not already started running."
+            self.cancelled = True
+            logger.info("canceled %s", self)
+
     def __init__(self):
-        self._cv = threading.Condition(threading.Lock())
-        self._minheap = []
-        self._timeout = None
-        self._start()
+        cv = self._cv = threading.Condition(threading.Lock())
+        tasks = self._tasks = []
 
-    def cancel(self, name):
-        with self._cv:
-            try:
-                task = [task for task in self._minheap if task.name == name][0]
-            except IndexError:
-                return
-            self._minheap.remove(task)
-            heapq.heapify(self._minheap)
-            self._cv.notify()
-        logger.info('canceled {}'.format(task.name))
-
-    def schedule(self, name, fn, start):
-        task = Task(start, name, fn)
-        logger.info('scheduling task: {}'.format(name))
-        with self._cv:
-            heapq.heappush(self._minheap, task)
-            self._cv.notify()
-        logger.info('scheduled task: {}'.format(name))
-
-    def _get_next_timeout(self):
-        if not self._minheap:
-            return None
-        return (self._minheap[0].start - datetime.now()).total_seconds()
-
-    def _start(self):
         def run():
             while True:
-                self._cv.acquire()
-                logger.info('waiting with timeout: {}'.format(self._timeout))
-                not_expired = self._cv.wait(timeout=self._timeout)
-                if self._timeout is None:
-                    logger.info('no timeout found; using min element')
-                    self._timeout = self._get_next_timeout()
-                    self._cv.release()
-                elif not_expired:
-                    logger.info('already waiting but woken up; comparing current with min element')
-                    self._timeout = min(self._timeout, self._get_next_timeout())
-                    self._cv.release()
-                else:
-                    logger.info('timed out; running next task')
-                    next_task = heapq.heappop(self._minheap)
-                    self._timeout = self._get_next_timeout()
-                    self._cv.release()
-                    threading.Thread(target=next_task.fn, name=next_task.name).start()
+                with cv:
+                    while True:
+                        timeout = None
+                        while tasks and tasks[0].cancelled:
+                            heapq.heappop(tasks)
+                        if tasks:
+                            timeout = tasks[0].timeout
+                            if timeout <= 0:
+                                task = heapq.heappop(tasks)
+                                break
+                        cv.wait(timeout=timeout)
+                logger.info("starting task %s", task)
+                threading.Thread(target=task.fn).start()
 
-        threading.Thread(target=run, name='timer').start()
+        threading.Thread(target=run, name='Scheduler').start()
+
+    def schedule(self, fn, start):
+        """Schedule a task that will run fn at or after start (which must be a
+        datetime object) and return an object representing that task.
+
+        """
+        task = self._Task(fn, start)
+        logger.info("scheduling task %s", task)
+        with self._cv:
+            heapq.heappush(self._tasks, task)
+            self._cv.notify()
+        logger.info("scheduled task %s", task)
+        return task
 
 
 def main():
@@ -80,17 +90,17 @@ def main():
         logger.info('running, elapsed: {}'.format((datetime.now() - start).total_seconds()))
 
     s = Scheduler()
-    s.schedule('task-1', functools.partial(task), start + timedelta(seconds=1))
-    s.schedule('task-2', functools.partial(task), start + timedelta(seconds=2))
-    s.cancel('task-2')
-    s.schedule('task-3', functools.partial(task), start + timedelta(seconds=3))
+    s.schedule(functools.partial(task), start + timedelta(seconds=1))
+    t = s.schedule(functools.partial(task), start + timedelta(seconds=2))
+    t.cancel()
+    s.schedule(functools.partial(task), start + timedelta(seconds=3))
     # note that task-4 precedes task-3, but is registered after task-3
-    s.schedule('task-4', functools.partial(task), start + timedelta(seconds=2.5))
+    s.schedule(functools.partial(task), start + timedelta(seconds=2.5))
     time.sleep(5)
     now = datetime.now()
-    s.schedule('task-5', functools.partial(task), now + timedelta(seconds=5))
-    s.schedule('task-6', functools.partial(task), now + timedelta(seconds=4))
-    s.schedule('task-7', functools.partial(task), now + timedelta(seconds=3.5))
+    s.schedule(functools.partial(task), now + timedelta(seconds=5))
+    s.schedule(functools.partial(task), now + timedelta(seconds=4))
+    s.schedule(functools.partial(task), now + timedelta(seconds=3.5))
 
 
 if __name__ == '__main__':
