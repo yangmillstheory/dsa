@@ -96,15 +96,16 @@ func dispatcher() {
 		}
 		if len(ts) != 0 {
 			task := ts[0]
-			if time.Now().After(task.start) {
-				go task.fn()
-				heap.Pop(&ts)
-			}
+			timeout = task.start.Sub(time.Now())
 		}
 		mu.Unlock()
 
 		select {
 		case <-time.After(timeout):
+			mu.Lock()
+			task := heap.Pop(&ts).(*Task)
+			mu.Unlock()
+			go task.fn()
 		case <-ch:
 		}
 	}
