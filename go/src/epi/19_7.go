@@ -62,7 +62,7 @@ var (
 )
 
 func init() {
-	ch = make(chan bool, 10)
+	ch = make(chan bool)
 	ts = make([]*Task, 0)
 	heap.Init(&ts)
 }
@@ -75,7 +75,6 @@ func schedule(fn func(), start time.Time) *Task {
 	mu.Lock()
 	heap.Push(&ts, t)
 	go func() {
-		// note: potential goroutine leak
 		ch <- true
 	}()
 	mu.Unlock()
