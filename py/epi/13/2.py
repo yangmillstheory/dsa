@@ -26,4 +26,4 @@ if __name__ == '__main__':
     a = [5, 13, 17, None, None, None, None, None]
     b = [3, 7, 11, 19]
 
-    print(merge(a, b))
+    assert merge(a, b) == [3, 5, 7, 11, 13, 17, 19, None]
