@@ -46,4 +46,3 @@ if __name__ == '__main__':
     ivals = [Interval(1, 2), Interval(3, 5), Interval(6, 7), Interval(8, 10), Interval(12, 16)]
     res = s.insert(ivals, Interval(4, 8))
     assert res == [Interval(1, 2), Interval(3, 10), Interval(12, 16)], res
-
