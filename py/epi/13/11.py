@@ -1,12 +1,12 @@
 def find_salary_cap(xs, t):
     xs.sort()
-    s, n = sum(xs), len(xs)
-    j = n-1
-    while j >= 0:
-        s -= xs[j]
-        if j >= 1 and t-s >= xs[j-1]:
-            return (t-s)/(n-j)
-        j -= 1
+    n = len(xs)
+    raw = 0
+    for j, x in enumerate(xs):
+        adj = (n-j)*x
+        if raw + adj >= t:
+            return (t-raw)/(n-j)
+        raw += x
     return -1
 
 
