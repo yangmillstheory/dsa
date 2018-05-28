@@ -12,6 +12,8 @@ class Solution(object):
         necessarily root-to-leaf) that sum to q.
 
         This runs in exponential time and O(h) space.
+
+        FIXME optimize this!
         '''
         n = 0
         if not root:
