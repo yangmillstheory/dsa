@@ -7,6 +7,7 @@
 
 class Solution:
     def reverseList(self, head):
+        '''Reverse a linked list in-place in O(n) time.'''
         if not head:
             return
         new_head = head
