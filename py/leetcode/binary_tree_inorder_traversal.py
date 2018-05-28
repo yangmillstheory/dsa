@@ -10,12 +10,10 @@ from collections import deque
 class Solution(object):
     def _in_order_iter(self, root):
         stack = deque()
-        while True:
+        while stack or root:
             if root:
                 stack.append(root)
                 root = root.left
-            elif not stack:
-                return
             else:
                 root = stack.pop()
                 yield root.val
@@ -23,4 +21,4 @@ class Solution(object):
 
     def inorderTraversal(self, root):
         '''Iterative in-order traversal of a binary tree in O(n) time and O(h) space.'''
-        return [node for node in self._in_order_iter(root)]
+        return list(self._in_order_iter(root))
