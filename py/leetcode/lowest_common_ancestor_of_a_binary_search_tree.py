@@ -8,6 +8,9 @@
 
 class Solution(object):
     def lowestCommonAncestor(self, root, p, q):
+        '''Find the lowest common ancestor of two nodes in
+        O(log n) time and O(log n) space.
+        '''
         if not root:
             return
         elif root == p or root == q:
@@ -21,6 +24,9 @@ class Solution(object):
         return root
 
     def lowestCommonAncestorIter(self, root, p, q):
+        '''Find the lowest common ancestor of two nodes in
+        O(log n) time and O(1) space.
+        '''
         while root:
             if root == p or root == q:
                 return root
