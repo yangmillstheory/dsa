@@ -33,8 +33,12 @@ class ListNode:
 
 class Solution:
     def insertionSortList(self, head):
+        '''Insertion sort for a linked list that runs in
+        O(n^2) time and O(1) space.
+        '''
         dummy = ListNode(0)
         dummy.next = head
+        # invariant: everything before head must be sorted
         while head and head.next:
             if head.val <= head.next.val:
                 head = head.next
