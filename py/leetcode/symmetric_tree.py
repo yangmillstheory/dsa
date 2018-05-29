@@ -40,6 +40,6 @@ class Solution(object):
                 return False
             if l.val != r.val:
                 return False
-            q.appendleft((l.right, r.left))
-            q.appendleft((l.left, r.right))
+            q.append((l.right, r.left))
+            q.append((l.left, r.right))
         return True
