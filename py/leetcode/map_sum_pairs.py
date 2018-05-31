@@ -1,10 +1,10 @@
-import collections
+from collections import defaultdict, deque
 
 
 class MapSum:
 
     def __init__(self):
-        self.children = {}
+        self.children = defaultdict(self.__class__)
         self.val = 0
 
     def insert(self, key, val):
@@ -15,8 +15,6 @@ class MapSum:
         """
         node = self
         for ch in key:
-            if ch not in node.children:
-                node.children[ch] = MapSum()
             node = node.children[ch]
         node.val = val
 
@@ -31,7 +29,7 @@ class MapSum:
                 return 0
             node = node.children[ch]
         res = 0
-        q = collections.deque()
+        q = deque()
         q.append(node)
         while q:
             node = q.popleft()
