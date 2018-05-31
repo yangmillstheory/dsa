@@ -1,7 +1,10 @@
+from collections import defaultdict
+
+
 class Trie:
 
     def __init__(self):
-        self.children = {}
+        self.children = defaultdict(self.__class__)
         self.is_word = False
 
     def insert(self, word):
@@ -12,8 +15,6 @@ class Trie:
         """
         node = self
         for ch in word:
-            if ch not in node.children:
-                node.children[ch] = Trie()
             node = node.children[ch]
         node.is_word = True
 
