@@ -9,6 +9,36 @@ class TreeNode:
         self.right = None
 
 
+class Solution2:
+    def _count_linked_list(self, head):
+        n_nodes = 0
+        node = head
+        while node:
+            n_nodes += 1
+            node = node.next
+        return n_nodes
+
+    def sortedListToBST(self, head):
+        '''Convert a sorted linked list to a complete binary
+        tree in O(n) time and O(log n) space.
+        '''
+        if not head:
+            return
+        self.head = head
+        self._build_tree(0, self._count_linked_list(head))
+
+    def _build_tree(self, lo, hi):
+        if lo > hi:
+            return
+        mid = lo + (hi-lo)//2
+        node = TreeNode(0)
+        node.left = self._build_tree(lo, mid-1)
+        node.val = self.head.val
+        self.head = self.head.next
+        node.right = self._build_tree(mid+1, hi)
+        return node
+
+
 class Solution:
     def _get_complete_tree(self, n_nodes):
         if not n_nodes:
@@ -60,3 +90,5 @@ class Solution:
             node.val = head.val
             head = head.next
         return root
+
+
