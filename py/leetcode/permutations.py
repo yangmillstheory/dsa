@@ -8,7 +8,7 @@ class Solution:
         if xs is None:
             return res
         n = len(xs)
-        if i >= len(xs):
+        if i >= n:
             res.append(xs[:])
         else:
             for j in range(i, n):
