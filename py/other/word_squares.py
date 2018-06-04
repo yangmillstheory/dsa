@@ -53,4 +53,29 @@ def _backtrack(root, n, sq, res):
 
 if __name__ == '__main__':
     res = word_squares(['BALL', 'LEAD', 'AREA', 'LADY'])
-    assert res == [['BALL', 'AREA', 'LEAD', 'LADY']], res
+    assert res == [
+        [
+            'BALL',
+            'AREA',
+            'LEAD',
+            'LADY',
+        ],
+    ], res
+
+    res = word_squares(['sator', 'arepo', 'tenet', 'opera', 'rotas'])
+    assert res == [
+        [
+            'sator',
+            'arepo',
+            'tenet',
+            'opera',
+            'rotas',
+        ],
+        [
+            'rotas',
+            'opera',
+            'tenet',
+            'arepo',
+            'sator',
+        ]
+    ], res
