@@ -5,12 +5,14 @@ from io import StringIO
 class Trie:
     def __init__(self):
         self.links = defaultdict(self.__class__)
+        self.words = set()
         self.is_word = False
 
     def insert(self, word):
         trie = self
         for ch in word:
             trie = trie.links[ch]
+            trie.words.add(word)
         trie.is_word = True
 
     def search(self, prefix):
@@ -20,18 +22,6 @@ class Trie:
                 return None
             trie = trie.links[ch]
         return trie
-
-    def get_children(self, prefix, children=None):
-        # note that this assumes that prefix is a prefix of self
-        if children is None:
-            children = []
-        trie = self
-        if trie.is_word:
-            children.append(prefix)
-        else:
-            for ch, node in trie.links.items():
-                node.get_children(prefix + ch, children)
-        return children
 
 
 def word_squares(words):
@@ -56,8 +46,7 @@ def _backtrack(root, n, sq, res):
         prefix = buf.getvalue()
         trie = root.search(prefix)
         if trie:
-            words = trie.get_children(prefix)
-            for word in words:
+            for word in trie.words:
                 _backtrack(root, n, sq + [word], res)
     return res
 
