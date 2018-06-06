@@ -2,10 +2,10 @@ class Solution:
     def removeDuplicates(self, xs):
         if not xs:
             return 0
-        w = 1
-        for j, x in enumerate(xs[1:]):
-            if x != xs[j]:
-                xs[w] = x
+        last, w = xs[0], 1
+        for i in range(1, len(xs)):
+            if xs[i] > last:
+                last = xs[w] = xs[i]
                 w += 1
         return w
 
