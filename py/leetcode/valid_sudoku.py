@@ -3,11 +3,10 @@ GRID_DIM = 9
 
 class Solution:
     def _check_valid_it(self, it):
-        rem = set(range(1, 10))
+        rem = set(map(str, range(1, 10)))
         for x in it:
             if x == '.':
                 continue
-            x = int(x)
             if x not in rem:
                 return False
             rem.remove(x)
