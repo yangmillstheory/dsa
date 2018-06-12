@@ -20,10 +20,10 @@ class Solution(object):
         return out
 
     def _make_justified_line(self, line, width):
-        if len(line) == 1 and len(line[0]) < width:
-            places = 1
-        elif len(line) > 1:
+        if len(line) > 1:
             places = len(line)-1
+        elif len(line[0]) < width:
+            places = 1
         else:
             # single word that fits width exactly
             return line[0]
