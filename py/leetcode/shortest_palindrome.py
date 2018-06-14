@@ -28,10 +28,3 @@ class Solution:
             if rev[-j:] == word[:j]:
                 i = j
         return rev[:n-i]+word
-
-
-if __name__ == '__main__':
-    s = Solution()
-    assert s.shortestPalindrome("abcd") == 'dcbabcd'
-    assert s.shortestPalindrome("aacecaaa") == 'aaacecaaa'
-    assert s.shortestPalindrome("abbacd") == 'dcabbacd'
