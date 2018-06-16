@@ -20,7 +20,7 @@ class Solution:
         memo = [[0 for _ in range(n+1)] for _ in range(n+1)]
         for i in range(1, n+1):
             for j in range(1, n+1):
-                if a[i-1] == b[i-1]:
+                if a[i-1] == b[j-1]:
                     memo[i][j] = memo[i-1][j-1] + 1
                     max_len = max(max_len, memo[i][j])
         return max_len
@@ -30,11 +30,17 @@ class Solution:
         # S(n) = O(n)
         n = len(a)
         max_len = 0
-        # memo[i][j] is the solution for the subproblem on a[:i] and b[:j]
-        memo = [0 for _ in range(n+1)]
+        memo = [
+            [0 for _ in range(n+1)],  # results from previous iteration
+            [0 for _ in range(n+1)],
+        ]
         for i in range(1, n+1):
-            for j in range(1, n+1, -1):
+            for j in range(1, n+1):
                 if a[i-1] == b[j-1]:
-                    memo[j] = memo[j-1] + 1
-                    max_len = max(max_len, memo[j])
+                    memo[1][j] = memo[0][j-1] + 1
+                    max_len = max(max_len, memo[1][j])
+                else:
+                    memo[1][j] = 0
+            for j in range(1, n+1):
+                memo[0][j] = memo[1][j]
         return max_len
