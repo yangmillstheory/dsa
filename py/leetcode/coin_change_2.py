@@ -12,22 +12,21 @@ class Solution(object):
         return self._change_recursive(amt, coins, len(coins)-1)
 
     def change_dp_1(self, amt, coins):
-        # T(a, c) = S(a, c) = O(a*c)
+        # T(a, c) = O(a*c)
+        # S(a, c) = O(a*c)
         if amt == 0:
             return 1
         if not coins:
             return 0
         n_coins = len(coins)
-        prev = [1]+([0]*amt)
-        curr = [1]+([0]*amt)
+        memo = [
+            [1]+([0]*amt)
+            for _ in range(n_coins)
+        ]
         for i in range(n_coins):
             for j in range(1, amt+1):
-                incl_c_i = curr[j-coins[i]] if j-coins[i] >= 0 else 0
-                excl_c_i = prev[j] if i-1 >= 0 else 0
-                curr[j] = incl_c_i+excl_c_i
-            prev = curr
-            curr = [1]*([0]*amt)
-        return curr[-1]
+                memo[i][j] = memo[i-1][j] + (memo[i][j-coins[i]] if j-coins[i] >= 0 else 0)
+        return memo[-1][-1]
 
     def change(self, amt, coins):
         # T(a, c) = O(a*c)
@@ -37,15 +36,8 @@ class Solution(object):
         if not coins:
             return 0
         n_coins = len(coins)
-        prev = [1]+([0]*amt)
-        curr, init = [1]+([0]*amt), True
+        memo = [1]+([0]*amt)
         for i in range(n_coins):
-            if not init:
-                curr = [1]+([0]*amt)
             for j in range(1, amt+1):
-                incl_c_i = curr[j-coins[i]] if j-coins[i] >= 0 else 0
-                excl_c_i = prev[j] if i-1 >= 0 else 0
-                curr[j] = incl_c_i+excl_c_i
-            prev, init = curr, False
-        return curr[-1]
-
+                memo[j] += memo[j-coins[i]] if j-coins[i] >= 0 else 0
+        return memo[-1]
