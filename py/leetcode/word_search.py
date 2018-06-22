@@ -19,7 +19,7 @@ class Solution:
         for di, dj in ((0, 1), (0, -1), (1, 0), (-1, 0)):
             if min(i+di, j+dj) < 0 or i+di >= m or j+dj >= n:
                 continue
-            elif self.grid[i+di][j+dj] == VISITING:
+            elif self.grid[i+di][j+dj] == VISITING or (i+di, j+dj, pos+1) in self.bad:
                 continue
             if self._exist(i+di, j+dj, pos+1):
                 return True
