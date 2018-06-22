@@ -1,22 +1,25 @@
-visiting = object()
+VISITING = object()
 
 
 class Solution:
     def __init__(self):
         self.grid = None
         self.word = None
+        self.seen = None
 
     def _exist(self, i, j, pos):
-        if self.grid[i][j] != self.word[pos]:
+        entry = self.grid[i][j]
+        if (i, j, pos) in self.bad or entry != self.word[pos]:
+            self.bad.add((i, j, pos))
             return False
         if pos == len(self.word)-1:
             return True
         m, n = len(self.grid), len(self.grid[0])
-        t, self.grid[i][j] = self.grid[i][j], visiting
+        t, self.grid[i][j] = entry, VISITING
         for di, dj in ((0, 1), (0, -1), (1, 0), (-1, 0)):
             if min(i+di, j+dj) < 0 or i+di >= m or j+dj >= n:
                 continue
-            elif self.grid[i+di][j+dj] == visiting:
+            elif self.grid[i+di][j+dj] == VISITING:
                 continue
             if self._exist(i+di, j+dj, pos+1):
                 return True
@@ -29,6 +32,7 @@ class Solution:
             return False
         self.grid = grid
         self.word = word
+        self.bad = set()
         m, n = len(self.grid), len(self.grid[0])
         for i in range(m):
             for j in range(n):
