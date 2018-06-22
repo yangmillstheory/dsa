@@ -64,7 +64,29 @@ class Solution(object):
                 prev[j] = curr[j]
         return best
 
+    def _dp_3(self, g):
+        # T(m, n) = O(m*n)
+        # S(m, n) = O(n)
+        m, n = len(g), len(g[0])
+        dp = [0]*n
+        best = 0
+        prev = 0
+        for i in range(m):
+            for j in range(n):
+                if g[i][j] == '0':
+                    dp[j] = 0
+                else:
+                    temp = dp[j]
+                    dp[j] = min(
+                        dp[j-1] if j else 0,
+                        dp[j],
+                        prev,
+                    ) + 1
+                    best = max(best, pow(dp[j], 2))
+                    prev = temp
+        return best
+
     def maximalSquare(self, g):
         if not g or not g[0]:
             return 0
-        return self._dp_2(g)
+        return self._dp_3(g)
