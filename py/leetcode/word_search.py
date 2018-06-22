@@ -27,7 +27,7 @@ class Solution:
         return False
 
     def exist(self, grid, word):
-        '''Word search in T(m,n) = O(m*n*w) and S(n) = O(1).'''
+        '''Word search in T(m,n) = O(m*n) and S(n) = O(m*n*w).'''
         if not grid or not grid[0] or not word:
             return False
         self.grid = grid
