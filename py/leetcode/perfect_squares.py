@@ -12,5 +12,5 @@ class Solution:
         for i in range(1, n+1):
             dp[i] = 1 + min(
                 dp[i-pows[j]]
-                for j in range(sqrt[i], 0, -1))
+                for j in range(sqrt[i]+1))
         return dp[-1]
