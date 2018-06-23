@@ -8,9 +8,8 @@ class Solution(object):
             if i in seen:
                 continue
             sub = s[start:i]
-            if sub in words:
-                if self._word_break(s, words, i, seen):
-                    return True
+            if sub in words and self._word_break(s, words, i, seen):
+                return True
         seen.add(start)
         return False
 
