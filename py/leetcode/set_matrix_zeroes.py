@@ -4,29 +4,16 @@ class Solution:
         if not g or not g[0]:
             return
         m, n = len(g), len(g[0])
-        row_0_marked, col_0_marked = True, True
-        for j in range(n):
-            if g[0][j] == 0:
-                break
-        else:
-            row_0_marked = False
-        for i in range(m):
-            if g[i][0] == 0:
-                break
-        else:
-            col_0_marked = False
+        row_0_marked = any(g[0][j] == 0 for j in range(n))
+        col_0_marked = any(g[i][0] == 0 for i in range(m))
         for i in range(1, m):
             for j in range(1, n):
                 if g[i][j] == 0:
                     g[i][0] = 0
                     g[0][j] = 0
         for i in range(1, m):
-            if g[i][0] == 0:
-                for j in range(n):
-                    g[i][j] = 0
-        for j in range(1, n):
-            if g[0][j] == 0:
-                for i in range(m):
+            for j in range(1, n):
+                if g[i][0] == 0 or g[0][j] == 0:
                     g[i][j] = 0
         if row_0_marked:
             for j in range(n):
