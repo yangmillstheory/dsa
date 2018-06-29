@@ -18,6 +18,8 @@ class Solution(object):
             v, n = q.popleft()
             if v == t:
                 return n
+            if v in seen:
+                continue
             chars = list(v)
             for i, ch in enumerate(v):
                 for _ch in alpha[i]:  # only use characters for edges that come from words
@@ -25,7 +27,6 @@ class Solution(object):
                     u = ''.join(chars)
                     if u in words and u not in seen and u != v:
                         q.append((u, n+1))
-                    seen.add(u)
                 chars[i] = ch
             seen.add(v)
         return 0
