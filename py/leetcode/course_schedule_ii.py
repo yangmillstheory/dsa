@@ -1,10 +1,10 @@
 class Vertex(object):
-    white, gray, black = range(3)
+    WHITE, GRAY, BLACK = range(3)
 
     def __init__(self, i):
         self.i = i
         self.prereqs = []
-        self.color = Vertex.white
+        self.color = Vertex.WHITE
 
 
 class Solution(object):
@@ -18,18 +18,18 @@ class Solution(object):
         g = _build_graph()
 
         def has_cycle(v, res):
-            if v.color == Vertex.gray:
+            if v.color == Vertex.GRAY:
                 return True
-            v.color, _has_cycle = Vertex.gray, False
+            v.color, _has_cycle = Vertex.GRAY, False
             for d in v.prereqs:
-                if d.color != Vertex.black and has_cycle(d, res):
+                if d.color != Vertex.BLACK and has_cycle(d, res):
                     _has_cycle = True
                     break
             else:
                 res.append(v.i)
-            v.color = Vertex.black
+            v.color = Vertex.BLACK
             return _has_cycle
         res = []
-        if any(has_cycle(v, res) for v in g if v.color != Vertex.black):
+        if any(has_cycle(v, res) for v in g if v.color != Vertex.BLACK):
             return []
         return res
