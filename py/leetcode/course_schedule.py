@@ -6,9 +6,6 @@ class Vertex(object):
         self.prereqs = []
         self.color = Vertex.white
 
-    def __repr__(self):
-        return '({}, {}, {})'.format(self.i, self.color, [d.i for d in self.prereqs])
-
 
 class Solution(object):
     def canFinish(self, n, prereqs):
