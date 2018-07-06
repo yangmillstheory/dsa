@@ -10,23 +10,28 @@
 # the value is an array with the index of the other people each person knows.
 # Note that relationships are one directional (e.g. 2 can introduce you to 3 but not vice versa)
 # e.g. Min cost: 22 Min path: [0, 1, 4, 6, 9]
+from contextlib import contextmanager
 
 
-def solve(wizards, i, path, cost):
+@contextmanager
+def candidate(path, used, i):
     path.append(i)
-    curr = sum([
-        pow(path[i]-path[i-1], 2)
-        for i in range(1, len(path))
-        if path[i] not in wizards[path[i-1]]
-    ])
-    if i == len(wizards)-1 and 0 < curr < cost['value']:
-        cost['path'], cost['value'] = path[:], curr
-    else:
-        for j in wizards[i]:
-            if j in path:
-                continue
-            solve(wizards, j, path, cost)
+    used.add(i)
+    yield
+    used.remove(i)
     path.pop()
+
+
+def solve(wizards, i, path, used, curr, cost):
+    with candidate(path, used, i):
+        if i == len(wizards)-1 and curr < cost['value']:
+            cost['path'], cost['value'] = path[:], curr
+        else:
+            for j in wizards[i]:
+                _curr = curr + (pow(j-i, 2) if j not in wizards[0] else 0)
+                if j in used or _curr > cost['value']:
+                    continue
+                solve(wizards, j, path, used, _curr, cost)
 
 
 if __name__ == '__main__':
@@ -43,5 +48,5 @@ if __name__ == '__main__':
         [1, 4],      # wizard 9 knows 1, 4
     ]
     cost = {'value': float('inf'), 'path': []}
-    solve(wizards, 0, [], cost)
+    solve(wizards, 0, [], set(), 0, cost)
     assert cost == {'value': 22, 'path': [0, 1, 4, 6, 9]}, cost
