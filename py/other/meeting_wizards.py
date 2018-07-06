@@ -23,15 +23,15 @@ def candidate(path, used, i):
 
 
 def solve(wizards, i, path, used, curr, cost):
-    if i == len(wizards)-1 and curr < cost['value']:
-        cost['path'], cost['value'] = path[:], curr
-    else:
+    with candidate(path, used, i):
+        if i == len(wizards)-1 and curr < cost['value']:
+            cost['path'], cost['value'] = path[:], curr
+        else:
             for j in wizards[i]:
                 _curr = curr + (pow(j-i, 2) if j not in wizards[0] else 0)
                 if j in used or _curr > cost['value']:
                     continue
-                with candidate(path, used, i):
-                    solve(wizards, j, path, used, _curr, cost)
+                solve(wizards, j, path, used, _curr, cost)
 
 
 if __name__ == '__main__':
