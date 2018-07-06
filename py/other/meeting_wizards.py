@@ -31,7 +31,7 @@ def solve(wizards, i, path, used, curr, cost):
                 penalty = pow(j-i, 2) if j not in wizards[0] else 0
                 if j in used or curr+penalty > cost['value']:
                     continue
-                solve(wizards, j, path, used, _curr, cost)
+                solve(wizards, j, path, used, curr+penalty, cost)
 
 
 if __name__ == '__main__':
