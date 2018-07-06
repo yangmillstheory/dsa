@@ -23,29 +23,29 @@ def candidate(path, used, i):
 
 
 def solve(wizards, i, path, used, curr, cost):
-    with candidate(path, used, i):
-        if i == len(wizards)-1 and curr < cost['value']:
-            cost['path'], cost['value'] = path[:], curr
-        else:
+    if i == len(wizards)-1 and curr < cost['value']:
+        cost['path'], cost['value'] = path[:], curr
+    else:
             for j in wizards[i]:
                 _curr = curr + (pow(j-i, 2) if j not in wizards[0] else 0)
                 if j in used or _curr > cost['value']:
                     continue
-                solve(wizards, j, path, used, _curr, cost)
+                with candidate(path, used, i):
+                    solve(wizards, j, path, used, _curr, cost)
 
 
 if __name__ == '__main__':
     wizards = [
-        [1, 2, 3],   # wizard 0 knows 1, 2, 3
-        [8, 6, 4],   # wizard 1 knows 8, 6, 4
-        [7, 8, 3],   # wizard 2 knows 7, 8, 3
-        [8, 1],      # wizard 3 knows 8, 1
-        [6],         # wizard 4 knows 6
-        [8, 7],      # wizard 5 knows 8, 7
-        [9, 4],      # wizard 6 knows 9, 4
-        [4, 6],      # wizard 7 knows 4, 6
-        [1],         # wizard 8 knows 1
-        [1, 4],      # wizard 9 knows 1, 4
+        [1, 2, 3],
+        [8, 6, 4],
+        [7, 8, 3],
+        [8, 1],
+        [6],
+        [8, 7],
+        [9, 4],
+        [4, 6],
+        [1],
+        [1, 4],
     ]
     cost = {'value': float('inf'), 'path': []}
     solve(wizards, 0, [], set(), 0, cost)
