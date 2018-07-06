@@ -28,8 +28,8 @@ def solve(wizards, i, path, used, curr, cost):
             cost['path'], cost['value'] = path[:], curr
         else:
             for j in wizards[i]:
-                _curr = curr + (pow(j-i, 2) if j not in wizards[0] else 0)
-                if j in used or _curr > cost['value']:
+                penalty = pow(j-i, 2) if j not in wizards[0] else 0
+                if j in used or curr+penalty > cost['value']:
                     continue
                 solve(wizards, j, path, used, _curr, cost)
 
