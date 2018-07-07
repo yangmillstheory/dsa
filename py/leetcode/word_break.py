@@ -1,4 +1,13 @@
 class Solution(object):
+    def _dp(self, s, words):
+        # T(n) = O(n^3)
+        # S(n) = O(n)
+        n = len(s)
+        dp = [True] + ([False]*n)
+        for j in range(1, n+1):
+            dp[j] = any(dp[i] and s[i:j] in words for i in range(j))
+        return dp[-1]
+
     def _word_break(self, s, words, start, seen):
         if start == len(s):
             return True
@@ -14,4 +23,4 @@ class Solution(object):
         return False
 
     def wordBreak(self, s, words):
-        return self._word_break(s, set(words), 0, set())
+        return self._dp(s, words)
