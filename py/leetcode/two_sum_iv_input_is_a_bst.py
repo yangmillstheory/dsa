@@ -24,7 +24,7 @@ def _in_order(tree):
 
 class Solution(object):
     def findTarget(self, tree, k):
-        '''Answer the Two-Sum query in O(h) time and O(h) space.'''
+        '''Answer the Two-Sum query in O(n) time and O(h) space.'''
         if not tree:
             return False
         fwd, rev = _in_order(tree), _rev_order(tree)
