@@ -8,5 +8,6 @@ class Solution(object):
             elif cand > k:
                 hi -= 1
             else:
+                # dumb that the return indices aren't zero-based
                 return [lo+1, hi+1]
         raise ValueError('I was promised an input with a positive result!')
