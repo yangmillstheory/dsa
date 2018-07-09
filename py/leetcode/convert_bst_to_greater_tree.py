@@ -15,3 +15,4 @@ class Solution(object):
         for tree in _rev_order(root):
             tree.val += prev
             prev = tree.val
+        return root
