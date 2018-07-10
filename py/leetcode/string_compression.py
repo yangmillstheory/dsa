@@ -39,4 +39,3 @@ class Solution(object):
 
     def compress(self, chars):
         return self._compress_wo_sentinel(chars)
-
