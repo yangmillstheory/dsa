@@ -10,7 +10,7 @@ def reverse(seq, lo, hi):
 
 class Solution(object):
     def reverseWords(self, s):
-        # do some cleanup
+        # sanitize
         s = s.strip()
         chars = []
         for i, ch in enumerate(s):
