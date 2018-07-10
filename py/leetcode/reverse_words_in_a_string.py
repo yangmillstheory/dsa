@@ -17,8 +17,3 @@ class Solution(object):
                 res.append(t)
                 i = j
         return ' '.join(res)
-
-
-if __name__ == '__main__':
-    s = Solution()
-    print(s.reverseWords('the sky is blue'))
