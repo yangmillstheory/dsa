@@ -30,4 +30,3 @@ class Solution(object):
                 self.letterCombinations(s, i+1, cand, res)
                 cand.pop()
         return res
-
