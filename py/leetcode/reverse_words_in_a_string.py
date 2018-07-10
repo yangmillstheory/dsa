@@ -12,8 +12,8 @@ def reverse(seq, lo, hi):
 
 class Solution(object):
     def reverseWords(self, s):
-        chars = []
         s = s.strip()
+        chars = []
         for i, ch in enumerate(s):
             if ch != DELIMITER or (i and s[i-1] != DELIMITER):
                 chars.append(ch)
