@@ -39,5 +39,5 @@ class Solution(object):
             for _ in range(n)
         ]
         for k, (i, j) in enumerate(spiral_it(n)):
-            res[i][j] = pow(k+1, 2)
+            res[i][j] = k+1
         return res
