@@ -1,6 +1,7 @@
 class Solution(object):
     def maxProfit(self, prices):
         n = len(prices)
+        # forward is the max. profit with a single buy-sell ending at day i
         forward = [0]*n
         min_price, best = float('inf'), 0
         for i, price in enumerate(prices):
