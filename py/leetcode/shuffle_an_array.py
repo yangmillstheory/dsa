@@ -12,9 +12,7 @@ class Solution(object):
 
     def shuffle(self):
         n, a = len(self._a), self._a
-        i = 0
-        for _ in range(n):
+        for i in range(n):
             j = randint(i, n-1)
             a[i], a[j] = a[j], a[i]
-            i += 1
         return a
