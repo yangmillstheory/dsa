@@ -8,7 +8,7 @@ def get_kth(head, k):
 class Solution(object):
     def reverseBetween(self, head, s, f):
         '''Reverse a sublist of a singly-linked list in O(f) time.'''
-        dummy = prev_s = ListNode(0)
+        dummy = ListNode(0)
         dummy.next = head
         prev_s = get_kth(dummy, s)
         s_node = prev_s.next
