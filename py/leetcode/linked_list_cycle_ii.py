@@ -9,7 +9,7 @@ def get_cycle_length(head):
     while node:
         n += 1
         node = node.next
-        if id(node) == id(head):
+        if node == head:
             break
     return n
 
@@ -18,13 +18,13 @@ def has_cycle(head):
     slow = fast = head
     while fast and fast.next:
         slow, fast = slow.next, fast.next.next
-        if id(slow) == id(fast):
+        if slow == fast:
             break
     if not fast or not fast.next:
         return None
     fast = walk(head, get_cycle_length(slow))
     slow = head
-    while id(fast) != id(slow):
+    while fast != slow:
         slow, fast = slow.next, fast.next
     return slow
 
