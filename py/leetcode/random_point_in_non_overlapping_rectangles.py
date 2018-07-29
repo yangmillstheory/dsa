@@ -1,4 +1,5 @@
 import bisect
+import functools
 import random
 
 
@@ -15,7 +16,7 @@ class Solution(object):
             self._areas.append(s)
 
     def pick(self):
-        x = random.randint(1, self._areas[-1])
+        x = random.uniform(0, self._areas[-1])
         j = bisect.bisect_left(self._areas, x)
         x1, y1, x2, y2 = self._rects[j]
         return [
