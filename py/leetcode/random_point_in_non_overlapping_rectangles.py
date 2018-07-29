@@ -1,5 +1,4 @@
 import bisect
-import functools
 import random
 
 
