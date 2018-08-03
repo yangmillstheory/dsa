@@ -15,11 +15,7 @@ class Solution:
 
     def rob(self, xs):
         '''Robbing a house in O(n) time and O(1) space.'''
-        res = 0
-        if not xs:
-            return res
         a, b = 0, 0
-        for x in xs:
-            res = max(a+x, b)
-            a, b = b, res
-        return res
+        for i, x in enumerate(xs):
+            a, b = b, max(x+a, b)
+        return b
