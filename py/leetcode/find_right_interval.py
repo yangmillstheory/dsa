@@ -2,15 +2,15 @@ import operator
 
 
 def first_larger(intervals, lo, hi, q):
-    lowest = -1
+    first = -1
     while lo <= hi:
         mid = lo+(hi-lo)//2
         if intervals[mid].start >= q:
-            lowest = mid
+            first = mid
             hi = mid-1
         else:
             lo = mid+1
-    return lowest
+    return first
 
 
 class Solution(object):
