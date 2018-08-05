@@ -9,8 +9,8 @@ class Solution:
         best = 0
         for i, x in enumerate(houses):
             if i < n-1:
-                a, b = b, max(houses[i]+a, b)
+                a, b = b, max(x+a, b)
             if i > 0:
-                c, d = d, max(houses[i]+c, d)
+                c, d = d, max(x+c, d)
             best = max(best, b, d)
         return best
