@@ -1,0 +1,32 @@
+import collections
+
+
+def digits_of(x):
+    digits = collections.deque()
+    while x:
+        x, r = divmod(x, 10)
+        digits.appendleft(r)
+    return digits
+
+
+def is_happy(n):
+    n_repeats = n
+    while True:
+        d = digits_of(n)
+        n_repeats -= 1
+        if n_repeats == 0:
+            break
+        n = sum([pow(digit, 2) for digit in d])
+        if n == 1:
+            return True
+    return False
+
+
+class Solution(object):
+    def isHappy(self, n):
+        return is_happy(n)
+
+
+if __name__ == '__main__':
+    s = Solution()
+    s.isHappy(2)
