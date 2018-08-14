@@ -49,11 +49,13 @@ class Solution(object):
                 self._turn_right()
             elif command == -2:
                 self._turn_left()
-            else:
+            elif 1 <= command <= 9:
                 for _ in range(command):
                     ok = self._advance()
                     if not ok:
                         break
+            else:
+                raise RuntimeError('bad command: {}'.format(command))
 
         def process(self, commands, obstacles):
             self.obs = set(map(tuple, obstacles))
