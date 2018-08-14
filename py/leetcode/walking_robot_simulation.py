@@ -67,9 +67,3 @@ class Solution(object):
     def robotSim(self, commands, obstacles):
         robot = self.Robot()
         return max(robot.process(commands, obstacles))
-
-
-if __name__ == '__main__':
-    s = Solution()
-    result = s.robotSim([4, -1, 4, -2, 4], [[2, 4]])
-    print(result)
