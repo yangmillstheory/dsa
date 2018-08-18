@@ -3,8 +3,8 @@ class Solution(object):
         stack, n = [], len(t)
         res = [0]*n
         for i, x in enumerate(t):
-            while stack and stack[-1][0] < x:
-                _, j = stack.pop()
+            while stack and t[stack[-1]] < x:
+                j = stack.pop()
                 res[j] = i-j
-            stack.append((x, i))
+            stack.append(i)
         return res
