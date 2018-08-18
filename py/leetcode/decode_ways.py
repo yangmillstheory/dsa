@@ -1,5 +1,5 @@
 class Solution(object):
-    def numDecodings(self, s):
+    def _backtrack(self, s):
         memo, n = {}, len(s)
 
         def n_decodings_from(start):
@@ -10,7 +10,7 @@ class Solution(object):
             if start == n:
                 return 1
             count = cand = p = 0
-            for j in range(start, min(start+3, n)):
+            for j in range(start, min(start+2, n)):
                 cand *= pow(10, p)
                 cand += int(s[j])
                 if cand < 1 or cand > 26:
@@ -20,6 +20,12 @@ class Solution(object):
             memo[start] = count
             return count
         return n_decodings_from(0)
+
+    def _dp(self, s):
+        pass
+
+    def numDecodings(self, s):
+        return self._backtrack(s)
 
 
 if __name__ == '__main__':
