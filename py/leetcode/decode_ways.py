@@ -25,5 +25,5 @@ class Solution(object):
 if __name__ == '__main__':
     s = Solution()
     s.numDecodings("4757562545844617494555774581341211511296816786586787755257741178599337186486723247528324612117156948")
-    assert s.numDecodings("226") == 3, s.numDecodings("226")
+    assert s.numDecodings("226") == 3
     assert s.numDecodings("12") == 2
