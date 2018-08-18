@@ -22,14 +22,22 @@ class Solution(object):
         return n_decodings_from(0)
 
     def _dp(self, s):
-        pass
+        # T(n) = O(n)
+        # S(n) = O(1)
+        a, b = 0, 1
+        for i, ch in enumerate(s):
+            c = b if ch != '0' else 0
+            if i-1 >= 0 and '0' < s[i-1] < '3' and 1 <= 10*int(s[i-1]) + int(ch) <= 26:
+                c += a
+            a, b = b, c
+        return b
 
     def numDecodings(self, s):
-        return self._backtrack(s)
+        return self._dp(s)
 
 
 if __name__ == '__main__':
     s = Solution()
-    s.numDecodings("4757562545844617494555774581341211511296816786586787755257741178599337186486723247528324612117156948")
-    assert s.numDecodings("226") == 3
-    assert s.numDecodings("12") == 2
+    assert s.numDecodings('0') == 0
+    assert s.numDecodings('226') == 3
+    assert s.numDecodings('01') == 0
