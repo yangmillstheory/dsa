@@ -5,11 +5,14 @@ class Solution(object):
         if min(amt, j) < 0:
             return 0
         if (amt, j) not in memo:
-            memo[(amt, j)] = self._change_recursive(amt, coins, j-1) + self._change_recursive(amt-coins[j], coins, j)
+            memo[(amt, j)] = (
+                self._change_recursive(amt, coins, j-1, memo) +
+                self._change_recursive(amt-coins[j], coins, j, memo)
+            )
         return memo[(amt, j)]
 
     def change_recursive(self, amt, coins):
-        return self._change_recursive(amt, coins, len(coins)-1)
+        return self._change_recursive(amt, coins, len(coins)-1, {})
 
     def change_dp_1(self, amt, coins):
         # T(a, c) = O(a*c)
