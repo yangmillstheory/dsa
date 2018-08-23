@@ -18,6 +18,8 @@ class Solution(object):
         if root == q:
             return q
         lca_l = self.lowestCommonAncestor(root.left, p, q)
+        if lca_l is not p and lca_l is not q:
+            return lca_l
         lca_r = self.lowestCommonAncestor(root.right, p, q)
         if lca_l and lca_r:
             return root
