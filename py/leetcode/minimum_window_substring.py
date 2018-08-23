@@ -9,29 +9,29 @@ class Solution:
             T(t, p) = O(t)
             S(t, p) = O(p)
         '''
-        n, j = len(text), 0
+        n = len(text)
+        j = 0
         orig = Counter(pat)
         have = Counter()
         rem = set(pat)
-        pat = set(pat)
         sub = ''
         for i in range(n):
-            if rem:
+            while rem and j < n:
                 # expand right to cover pat
-                while j < n and rem:
-                    ch = text[j]
-                    if ch in pat:
-                        have[ch] += 1
+                ch = text[j]
+                if ch in orig:
+                    have[ch] += 1
                     if have[ch] >= orig[ch] and ch in rem:
                         rem.remove(ch)
-                    j += 1
-            if not rem and (sub == '' or j-i < len(sub)):
+                j += 1
+            if rem and j == n:
+                break
+            if not rem and ((not sub) or j-i < len(sub)):
                 sub = text[i:j]
             ch = text[i]
-            if ch in have:
-                have[ch] -= 1
-                if have[ch] < orig[ch]:
-                    rem.add(ch)
+            have[ch] -= 1
+            if ch in orig and have[ch] < orig[ch]:
+                rem.add(ch)
         return sub
 
 
