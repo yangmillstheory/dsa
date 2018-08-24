@@ -24,3 +24,17 @@ class NumArray(object):
             return 0
         mid = lo + (hi-lo)//2
         return self._sum_range(q_lo, q_hi, lo, mid, 2*w+1) + self._sum_range(q_lo, q_hi, mid+1, hi, 2*w+2)
+
+    def update(self, i, v):
+        self._update(i, v, 0, self._n-1, 0)
+
+    def _update(self, i, v, lo, hi, w):
+        if i < lo or i > hi:
+            return
+        if lo == hi:
+            self._tree[w] = v
+        else:
+            mid = lo + (hi-lo)//2
+            self._update(i, v, lo, mid, 2*w+1)
+            self._update(i, v, mid+1, hi, 2*w+2)
+            self._tree[w] = self._tree[2*w+1] + self._tree[2*w+2]
