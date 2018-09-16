@@ -3,7 +3,7 @@ import collections
 
 class Solution(object):
     def twoSum(self, a, q):
-        # T(n) = O(n*log(n))
+        # T(n) = O(n)
         # S(n) = O(n)
         ind = collections.defaultdict(set)
         for i, x in enumerate(a):
