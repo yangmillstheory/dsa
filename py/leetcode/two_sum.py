@@ -1,7 +1,18 @@
+import collections
+
+
 class Solution(object):
-    def twoSum(self, a, k):
+    def twoSum(self, a, q):
+        # T(n) = O(n*log(n))
+        # S(n) = O(n)
+        ind = collections.defaultdict(set)
         for i, x in enumerate(a):
-            for j in range(i+1, len(a)):
-                if x+a[j] == k:
-                    return [i, j]
-        raise ValueError('I was promised an input with a positive result!')
+            ind[x].add(i)
+        for i, x in enumerate(a):
+            if q-x not in ind:
+                continue
+            j = ind[q-x].pop()
+            if j != i:
+                return [i, j]
+            elif ind[q-x]:
+                return [i, ind[q-x].pop()]
